@@ -22,4 +22,3 @@
  * @link        http://www.zentao.cn
  */
 $lang->file->common = '附件';
-$lang->file->label  = '标题：';

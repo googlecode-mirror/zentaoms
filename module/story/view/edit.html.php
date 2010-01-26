@@ -31,7 +31,7 @@ function loadModuleMenu(productID)
 }
 </script>
 <div class='yui-d0'>
-  <form method='post' enctype='multipart/form-data' target='hiddenwin'>
+  <form method='post' target='hiddenwin'>
     <table class='table-1'> 
       <caption><?php echo $lang->story->edit;?></caption>
       <tr>
@@ -41,12 +41,6 @@ function loadModuleMenu(productID)
           <span id='moduleIdBox'><?php echo html::select('module', $moduleOptionMenu, $story->module);?></span>
         </td>
       </tr>  
-      <tr>
-        <th class='rowhead'><?php echo $lang->story->plan;?></th>
-        <td class='a-left'>
-          <?php echo html::select('plan', $plans, $story->plan, 'class=select-3');?>
-        </td>
-      </tr>
       <tr>
         <th class='rowhead'><?php echo $lang->story->pri;?></th>
         <td class='a-left'>
@@ -81,15 +75,11 @@ function loadModuleMenu(productID)
       </tr>  
       <tr>
         <th class='rowhead'><?php echo $lang->story->spec;?></th>
-        <td class='a-left'><textarea name='spec' rows='5' class='text-1'><?php echo $story->spec;?></textarea></td>
+        <td class='a-left'><textarea name='spec' rows='8' class='text-1'><?php echo $story->spec;?></textarea></td>
       </tr>  
       <tr>
         <th class='rowhead'><?php echo $lang->comment;?></th>
-        <td class='a-left'><textarea name='comment' rows='4' class='text-1'></textarea></td>
-      </tr>  
-      <tr>
-        <th class='rowhead'><?php echo $lang->story->legendAttatch;?></th>
-        <td class='a-left'><?php echo $this->fetch('file', 'buildform');?></td>
+        <td class='a-left'><textarea name='comment' rows='5' class='text-1'></textarea></td>
       </tr>  
       <tr>
         <td colspan='2' class='a-center'><?php echo html::submitButton() . html::resetButton();?></td>

@@ -47,7 +47,7 @@ class user extends control
         $user = $this->dao->findByAccount($account)->from(TABLE_USER)->fetch();
 
         /* 设置菜单。*/
-        $this->user->setMenu($this->user->getPairs('noempty|noclosed'), $account);
+        $this->user->setMenu($this->user->getPairs($this->app->company->id, 'noempty|noclosed'), $account);
 
         $todos = $this->todo->getList($type, $account, $status);
         $date  = (int)$type == 0 ? $this->todo->today() : $type;
@@ -79,7 +79,7 @@ class user extends control
         $user = $this->dao->findByAccount($account)->from(TABLE_USER)->fetch();
 
         /* 设置菜单。*/
-        $this->user->setMenu($this->user->getPairs('noempty|noclosed'), $account);
+        $this->user->setMenu($this->user->getPairs($this->app->company->id, 'noempty|noclosed'), $account);
  
         /* 设定header和position信息。*/
         $header['title'] = $this->lang->user->common . $this->lang->colon . $this->lang->user->task;
@@ -104,7 +104,7 @@ class user extends control
         $user = $this->dao->findByAccount($account)->from(TABLE_USER)->fetch();
 
         /* 设置菜单。*/
-        $this->user->setMenu($this->user->getPairs('noempty|noclosed'), $account);
+        $this->user->setMenu($this->user->getPairs($this->app->company->id, 'noempty|noclosed'), $account);
  
         /* 设定header和position信息。*/
         $header['title'] = $this->lang->user->common . $this->lang->colon . $this->lang->user->bug;
@@ -129,7 +129,7 @@ class user extends control
         $user = $this->dao->findByAccount($account)->from(TABLE_USER)->fetch();
 
         /* 设置菜单。*/
-        $this->user->setMenu($this->user->getPairs('noempty|noclosed'), $account);
+        $this->user->setMenu($this->user->getPairs($this->app->company->id, 'noempty|noclosed'), $account);
 
         /* 设定header和position信息。*/
         $header['title'] = $this->lang->user->common . $this->lang->colon . $this->lang->user->project;
@@ -152,7 +152,7 @@ class user extends control
         $position[]      = $this->lang->user->profile;
 
         /* 设置菜单。*/
-        $this->user->setMenu($this->user->getPairs('noempty|noclosed'), $account);
+        $this->user->setMenu($this->user->getPairs($this->app->company->id, 'noempty|noclosed'), $account);
 
         $this->assign('header',   $header);
         $this->assign('position', $position);
@@ -232,26 +232,14 @@ class user extends control
     {
         if($confirm == 'no')
         {
-            die(js::confirm($this->lang->user->confirmDelete, $this->createLink('user', 'delete', "userID=$userID&confirm=yes")));
+            echo js::confirm($this->lang->user->confirmDelete, $this->createLink('user', 'delete', "userID=$userID&confirm=yes"));
+            exit;
         }
         else
         {
             $this->user->delete($userID);
-            die(js::locate($this->createLink('company', 'browse'), 'parent'));
-        }
-    }
-
-    /* 激活一个用户。*/
-    public function activate($userID, $confirm = 'no')
-    {
-        if($confirm == 'no')
-        {
-            die(js::confirm($this->lang->user->confirmActivate, $this->createLink('user', 'activate', "userID=$userID&confirm=yes")));
-        }
-        else
-        {
-            $this->user->activate($userID);
-            die(js::locate($this->createLink('company', 'browse'), 'parent'));
+            echo js::locate($this->createLink('admin', 'browseuser', "companyID={$this->app->company->id}"), 'parent');
+            exit;
         }
     }
 
@@ -292,7 +280,7 @@ class user extends control
             {
                 $user->rights = $this->user->authorize($_POST['account']);
                 $_SESSION['user'] = $user;
-                $this->app->user = $_SESSION['user'];
+                $this->app->setSessionUser($user);
 
                 /* POST变量中设置了referer信息，且非user/login.html, 非user/deny.html，并且包含当前系统的域名。*/
                 if(isset($_POST['referer'])  and 

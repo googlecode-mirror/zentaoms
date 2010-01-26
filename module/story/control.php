@@ -39,12 +39,13 @@ class story extends control
         {
             $storyID = $this->story->create();
             if(dao::isError()) die(js::error(dao::getError()));
+
             $this->loadModel('action');
             $this->action->create('story', $storyID, 'Opened', '');
+
             die(js::locate($this->createLink('story', 'view', "storyID=$storyID"), 'parent'));
         }
 
-        /* 设置产品相关数据。*/
         $product  = $this->product->findByID($productID);
         $products = $this->product->getPairs();
         $users    = $this->user->getPairs();
@@ -53,16 +54,17 @@ class story extends control
         /* 设置菜单。*/
         $this->product->setMenu($products, $product->id);
 
-        /* 赋值到模板。*/
-        $this->view->header->title    = $product->name . $this->lang->colon . $this->lang->story->create;
-        $this->view->position[]       = html::a($this->createLink('product', 'browse', "product=$productID"), $product->name);
-        $this->view->position[]       = $this->lang->story->create;
-        $this->view->product          = $product;
-        $this->view->products         = $products;
-        $this->view->users            = $users;
-        $this->view->moduleID         = $moduleID;
-        $this->view->moduleOptionMenu = $moduleOptionMenu;
-        $this->view->plans            = $this->loadModel('productplan')->getPairs($productID);
+        $header['title'] = $product->name . $this->lang->colon . $this->lang->story->create;
+        $position[]      = html::a($this->createLink('product', 'browse', "product=$productID"), $product->name);
+        $position[]      = $this->lang->story->create;
+
+        $this->assign('header',           $header);
+        $this->assign('position',         $position);
+        $this->assign('product',          $product);
+        $this->assign('products',         $products);
+        $this->assign('users',            $users);
+        $this->assign('moduleID',         $moduleID);
+        $this->assign('moduleOptionMenu', $moduleOptionMenu);
         $this->display();
     }
 
@@ -74,19 +76,16 @@ class story extends control
             $this->loadModel('action');
             $changes = $this->story->update($storyID);
             if(dao::isError()) die(js::error(dao::getError()));
-            $files = $this->loadModel('file')->saveUpload('story', $storyID);
-            if($this->post->comment != '' or !empty($changes) or !empty($files))
+            if($this->post->comment != '' or !empty($changes))
             {
                 $action = !empty($changes) ? 'Edited' : 'Commented';
-                $fileAction = '';
-                if(!empty($files)) $fileAction = "Add Files " . join(',', $files) . "\n" ;
-                $actionID = $this->action->create('story', $storyID, $action, $fileAction . $this->post->comment);
+                $actionID = $this->action->create('story', $storyID, $action, $this->post->comment);
                 $this->action->logHistory($actionID, $changes);
             }
             die(js::locate($this->createLink('story', 'view', "storyID=$storyID"), 'parent'));
         }
 
-        /* 获取数据。*/
+
         $story    = $this->story->findByID($storyID);
         $product  = $this->product->findByID($story->product);
         $products = $this->product->getPairs();
@@ -96,16 +95,17 @@ class story extends control
         /* 设置菜单。*/
         $this->product->setMenu($products, $product->id);
 
-        /* 赋值到模板。*/
-        $this->view->header->title    = $product->name . $this->lang->colon . $this->lang->story->edit . $this->lang->colon . $story->title;
-        $this->view->position[]       = html::a($this->createLink('product', 'browse', "product=$product->id"), $product->name);
-        $this->view->position[]       = $this->lang->story->edit;
-        $this->view->product          = $product;
-        $this->view->products         = $products;
-        $this->view->story            = $story;
-        $this->view->users            = $users;
-        $this->view->moduleOptionMenu = $moduleOptionMenu;
-        $this->view->plans            = $this->loadModel('productplan')->getPairs($product->id);
+        $header['title'] = $product->name . $this->lang->colon . $this->lang->story->edit . $this->lang->colon . $story->title;
+        $position[]      = html::a($this->createLink('product', 'browse', "product=$product->id"), $product->name);
+        $position[]      = $this->lang->story->edit;
+
+        $this->assign('header',           $header);
+        $this->assign('position',         $position);
+        $this->assign('product',          $product);
+        $this->assign('products',         $products);
+        $this->assign('story',            $story);
+        $this->assign('moduleOptionMenu', $moduleOptionMenu);
+        $this->assign('users',            $users);
         $this->display();
     }
 
@@ -113,13 +113,11 @@ class story extends control
     public function view($storyID)
     {
         $this->loadModel('action');
-        $storyID      = (int)$storyID;
-        $story        = $this->dao->findByID((int)$storyID)->from(TABLE_STORY)->fetch();
-        $story->files = $this->loadModel('file')->getByObject('story', $storyID);
-        $product      = $this->dao->findById($story->product)->from(TABLE_PRODUCT)->fields('name, id')->fetch();
-        $plan         = $this->dao->findById($story->plan)->from(TABLE_PRODUCTPLAN)->fetch('title');
-        $modulePath   = $this->tree->getParents($story->module);
-        $users        = $this->user->getPairs('noletter');
+        $storyID    = (int)$storyID;
+        $story      = $this->dao->findByID((int)$storyID)->from(TABLE_STORY)->fetch();
+        $product    = $this->dao->findById($story->product)->from(TABLE_PRODUCT)->fields('name, id')->fetch();
+        $modulePath = $this->tree->getParents($story->module);
+        $users      = $this->user->getPairs();
 
         /* 设置菜单。*/
         $this->product->setMenu($this->product->getPairs(), $product->id);
@@ -131,7 +129,6 @@ class story extends control
         $this->assign('header',     $header);
         $this->assign('position',   $position);
         $this->assign('product',    $product);
-        $this->assign('plan',       $plan);
         $this->assign('story',      $story);
         $this->assign('users',      $users);
         $this->assign('actions',    $this->action->getList('story', $storyID));

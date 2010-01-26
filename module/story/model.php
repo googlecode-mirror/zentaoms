@@ -36,25 +36,17 @@ class storyModel extends model
     {
         $now   = date('Y-m-d H:i:s', time());
         $story = fixer::input('post')
-            ->cleanInt('product,module,pri,plan')
+            ->cleanInt('product,module,pri')
             ->cleanFloat('estimate')
             ->stripTags('title')
             ->specialChars('spec')
-            ->setDefault('plan', 0)
             ->add('openedBy', $this->app->user->account)
             ->add('openedDate', $now)
             ->add('assignedDate', 0)
             ->setIF($this->post->assignedTo != '', 'assignedDate', $now)
-            ->remove('files,labels')
             ->get();
         $this->dao->insert(TABLE_STORY)->data($story)->autoCheck()->check('title', 'notempty')->exec();
-        if(!dao::isError())
-        {
-            $storyID = $this->dao->lastInsertID();
-            $this->loadModel('file')->saveUpload('story', $storyID);
-            return $storyID;
-        }
-        return false;
+        if(!dao::isError()) return $this->dao->lastInsertID();
     }
 
     /* 更新需求。*/
@@ -63,16 +55,14 @@ class storyModel extends model
         $now      = date('Y-m-d H:i:s', time());
         $oldStory = $this->findByID($storyID);
         $story    = fixer::input('post')
-            ->cleanInt('product,module,pri,plan')
+            ->cleanInt('product,module,pri')
             ->stripTags('title')
             ->specialChars('spec')
             ->remove('comment')
             ->add('assignedDate', $oldStory->assignedDate)
             ->add('lastEditedBy', $this->app->user->account)
             ->add('lastEditedDate', $now)
-            ->setDefault('plan', 0)
             ->setIF($this->post->assignedTo != $oldStory->assignedTo, 'assignedDate', $now)
-            ->remove('files,labels')
             ->get();
         $this->dao->update(TABLE_STORY)->data($story)->autoCheck()->check('title', 'notempty')->where('id')->eq((int)$storyID)->exec();
         if(!dao::isError()) return common::createChanges($oldStory, $story);
@@ -107,24 +97,6 @@ class storyModel extends model
         if($status != 'all') $sql->andWhere('status')->in($status);
         $stories = $sql->orderBy($order)->fetchAll();
         return $this->formatStories($stories);
-    }
-
-    /* 按照某一个查询条件获取列表。*/
-    public function getByQuery($productID, $query, $orderBy, $pager = null)
-    {
-        $tmpStories = $this->dao->select('*')->from(TABLE_STORY)->where($query)->andWhere('product')->eq((int)$productID)->orderBy($orderBy)->page($pager)->fetchGroup('plan');
-        if(!$tmpStories) return array();
-        $plans   = $this->dao->select('id,title')->from(TABLE_PRODUCTPLAN)->where('id')->in(array_keys($tmpStories))->fetchPairs();
-        $stories = array();
-        foreach($tmpStories as $planID => $planStories)
-        {
-            foreach($planStories as $story)
-            {
-                $story->planTitle = isset($plans[$planID]) ? $plans[$planID] : '';
-                $stories[] = $story;
-            }
-        }
-        return $stories;
     }
 
     /* 获得某一个项目相关的所有需求列表。*/
@@ -165,17 +137,6 @@ class storyModel extends model
     public function getPlanStoryPairs($planID, $status = 'all', $orderBy = 'id|desc', $pager = null)
     {
         return $this->dao->select('*')->from(TABLE_STORY)->where('plan')->eq($planID)->onCaseOf($status != 'all')->andWhere('status')->in($status)->endCase()->fetchAll();
-    }
-
-    /* 获得指派给某一个用户的需求列表。*/
-    function getUserStories($account, $status = 'all', $orderBy = 'id|desc', $pager = null)
-    {
-        return $this->dao->select('t1.*, t2.title as planTitle, t3.name as productTitle')
-            ->from(TABLE_STORY)->alias('t1')
-            ->leftJoin(TABLE_PRODUCTPLAN)->alias('t2')->on('t1.plan = t2.id')
-            ->leftJoin(TABLE_PRODUCT)->alias('t3')->on('t1.product = t3.id')
-            ->where('t1.assignedTo')->eq($account)
-            ->orderBy($orderBy)->page($pager)->fetchAll();
     }
 
     /* 格式化需求显示。*/

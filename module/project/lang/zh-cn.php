@@ -21,7 +21,7 @@
  * @version     $Id$
  * @link        http://www.zentao.cn
  */
-$lang->project->common       = '项目视图';
+$lang->project->common       = '项目';
 $lang->project->index        = "项目首页";
 $lang->project->create       = "添加项目";
 $lang->project->delete       = "删除项目";
@@ -68,20 +68,18 @@ $lang->project->canceledDate = '取消日期';
 $lang->project->PO           = '产品负责人';
 $lang->project->PM           = '项目负责人';
 $lang->project->QM           = '测试负责人';
-$lang->project->teamname     = '团队名称';
-$lang->project->team         = '团队成员';
+$lang->project->team         = '团队名称';
 $lang->project->products     = '相关产品';
 $lang->project->childProjects= '子项目';
 $lang->project->task         = '任务列表';
 $lang->project->story        = '需求列表';
 $lang->project->bug          = 'Bug列表';
-$lang->project->build        = 'Build列表';
 $lang->project->burn         = '燃烧图';
 $lang->project->burnData     = '燃烧图数据';
 
-$lang->project->beginAndEnd  = '起止时间';
-$lang->project->lblStats     = '工时统计';
-$lang->project->stats        = '总共预计『%s』工时<br />已经消耗『%s』工时<br />预计剩余『%s』工时';
+$lang->project->beginAndEnd = '起止时间';
+$lang->project->lblStats    = '工时统计';
+$lang->project->stats       = '总共预计『%s』工时<br />已经消耗『%s』工时<br />预计剩余『%s』工时';
 $lang->project->oneLineStats = "项目『%s』, 代号为『%s』, 相关产品为『%s』，『%s』开始，『%s』结束，总预计『%s』工时，已消耗『%s』工时，预计剩余『%s』工时。";
 
 $lang->project->statusList->wait  = '未开始';

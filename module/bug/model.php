@@ -47,13 +47,13 @@ class bugModel extends model
             ->cleanInt('product, module, severity')
             ->specialChars('steps')
             ->join('mailto', ',')
-            ->remove('files, labels')
             ->get();
-        $this->dao->insert(TABLE_BUG)->data($bug)->autoCheck()->batchCheck('title,type,openedBuild', 'notempty')->exec();
+        $this->dao->insert(TABLE_BUG)->data($bug)->autoCheck()->batchCheck('title,type', 'notempty')->exec();
         if(!dao::isError())
         {
             $bugID = $this->dao->lastInsertID();
-            $this->loadModel('file')->saveUpload('bug', $bugID);
+            $this->loadModel('file');
+            $this->file->saveUpload('files', 'bug', $bugID);
             return $bugID;
         }
         return false;
@@ -79,9 +79,9 @@ class bugModel extends model
         foreach($bug as $key => $value) if(strpos($key, 'Date') !== false and !(int)substr($value, 0, 4)) $bug->$key = '';
         $bug->mailto = ltrim(trim($bug->mailto), ',');
         if($bug->duplicateBug) $bug->duplicateBugTitle = $this->dao->findById($bug->duplicateBug)->from(TABLE_BUG)->fields('title')->fetch('title');
-        if($bug->case)         $bug->caseTitle         = $this->dao->findById($bug->case)->from(TABLE_CASE)->fields('title')->fetch('title');
-        if($bug->linkBug)      $bug->linkBugTitles     = $this->dao->select('id,title')->from(TABLE_BUG)->where('id')->in($bug->linkBug)->fetchPairs();
-        $bug->files = $this->loadModel('file')->getByObject('bug', $bugID);
+
+        $this->loadModel('file');
+        $bug->files = $this->file->getByObject('bug', $bugID);
         return $bug;
     }
 
@@ -94,7 +94,7 @@ class bugModel extends model
             ->cleanInt('product,module,severity,project,story,task')
             ->stripTags('title')
             ->specialChars('steps')
-            ->remove('comment,fiels,labels')
+            ->remove('comment')
             ->setDefault('project,module,project,story,task,duplicateBug', 0)
             ->add('lastEditedBy',   $this->app->user->account)
             ->add('lastEditedDate', $now)
@@ -133,11 +133,11 @@ class bugModel extends model
             ->add('resolvedBy',     $this->app->user->account)
             ->add('resolvedDate',   $now)
             ->add('status',         'resolved')
+            ->add('assignedTo',     $oldBug->openedBy)
             ->add('assignedDate',   $now)
             ->add('lastEditedBy',   $this->app->user->account)
             ->add('lastEditedDate', $now)
             ->setDefault('duplicateBug', 0)
-            ->setDefault('assignedTo', $oldBug->openedBy)
             ->remove('comment')
             ->get();
 
@@ -167,7 +167,7 @@ class bugModel extends model
             ->add('duplicateBug', 0)
             ->add('lastEditedBy',   $this->app->user->account)
             ->add('lastEditedDate', $now)
-            ->remove('comment,files,labels')
+            ->remove('comment')
             ->get();
 
         $this->dao->update(TABLE_BUG)->data($bug)->autoCheck()->where('id')->eq((int)$bugID)->exec();

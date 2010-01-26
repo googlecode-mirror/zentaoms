@@ -21,13 +21,17 @@
  * @version     $Id$
  * @link        http://www.zentao.cn
  */
-$config->version     = '0.4 beta';        // 版本号，切勿修改。
+$config->version     = '0.3 beta';        // 版本号，切勿修改。
+$config->installed   = false;             // 是否已经安装。手工安装，需要修改此参数为true。 
+$config->debug       = true;              // 是否打开debug功能。
+$config->webRoot     = '/';               // web网站的根目录。
 $config->encoding    = 'UTF-8';           // 网站的编码。
 $config->cookiePath  = '/';               // cookie的有效路径。
 $config->cookieLife  = time() + 2592000;  // cookie的生命周期。
 
 $config->requestType = 'PATH_INFO';       // 如何获取当前请求的信息，可选值：PATH_INFO|GET
 $config->pathType    = 'clean';           // requestType=PATH_INFO: 请求url的格式，可选值为full|clean，full格式会带有参数名称，clean则只有取值。
+$config->strictParams= false;             // 传递参数的名称是否与方法定义中名称完全一致。如果设为false，则需要保证顺序一致。
 $config->requestFix  = '-';               // requestType=PATH_INFO: 请求url的分隔符，可选值为斜线、下划线、减号。后面两种形式有助于SEO。
 $config->moduleVar   = 'm';               // requestType=GET: 模块变量名。
 $config->methodVar   = 'f';               // requestType=GET: 方法变量名。
@@ -44,19 +48,26 @@ $config->default->lang   = 'zh-cn';                     // 默认的语言。
 $config->default->theme  = 'default';                   // 默认的主题。
 $config->default->module = 'index';                     // 默认的模块。当请求中没有指定模块时，加载该模块。
 $config->default->method = 'index';                     // 默认的方法。当请求中没有指定方法或者指定的方法不存在时，调用该方法。
+$config->default->domain = 'pms.easysoft.com';          // 默认的域名，当请求中的域名没有对应的记录时，使用此默认域名对应的公司信息。
 
 $config->file->dangers = 'php,jsp,py,rb,asp,';          // 不允许上传的文件类型列表。
 $config->file->maxSize = 1024 * 1024;                   // 允许上传的文件大小，单位为字节。
 
-$config->db->persistant = true;                        // 是否打开持久连接。
+$config->db->errorMode  = PDO::ERRMODE_EXCEPTION;       // PDO的错误模式: PDO::ERRMODE_SILENT|PDO::ERRMODE_WARNING|PDO::ERRMODE_EXCEPTION
+$config->db->persistant = false;                        // 是否打开持久连接。
 $config->db->driver     = 'mysql';                      // pdo的驱动类型，目前暂时只支持mysql。
-$config->db->dao        = true;                         // 是否使用DAO。
+$config->db->host       = '127.0.0.1';                  // mysql主机。
+$config->db->port       = '3306';                       // mysql主机端口号。
+$config->db->name       = 'zentao';                     // 数据库名称。
+$config->db->user       = 'root';                       // 数据库用户名。
+$config->db->password   = '';                           // 密码。
 $config->db->encoding   = 'UTF8';                       // 数据库的编码。
+$config->db->prefix     = 'zt_';                        // 数据表前缀。
+$config->db->dao        = true;                         // 是否使用DAO。
 
 /* 包含自定义配置文件。*/
 $myConfig = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'my.php';
 if(file_exists($myConfig)) include $myConfig;
-if(!isset($config->db->prefix)) $config->db->prefix = 'zt_';
 
 /* 数据表的定义。*/
 define('TABLE_ACTION',         $config->db->prefix . 'action');

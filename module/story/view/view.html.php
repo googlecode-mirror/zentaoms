@@ -45,11 +45,7 @@
     <div class='yui-b'>
       <fieldset>
         <legend><?php echo $lang->story->legendSpec;?></legend>
-        <div class='content'><?php echo nl2br($story->spec);?></div>
-      </fieldset>
-      <fieldset>
-        <legend><?php echo $lang->story->legendAttatch;?></legend>
-        <div><?php foreach($story->files as $file) echo html::a($file->fullPath, $file->title, '_blank');?></div>
+        <div><?php echo nl2br($story->spec);?></div>
       </fieldset>
       <?php include '../../common/action.html.php';?>
       <fieldset>
@@ -84,10 +80,6 @@
            }
            ?>
          </td>
-       </tr>
-       <tr>
-         <td class='rowhead'><?php echo $lang->story->plan;?></td>
-         <td><?php echo $plan;?></td>
        </tr>
        <!--
        <tr>
@@ -124,7 +116,11 @@
      <div></div>
    </fieldset>
 
-      <fieldset>
+   <fieldset>
+   <legend><?php echo $lang->story->legendAttatch;?></legend>
+     <div>&nbsp;</div>
+   </fieldset>
+   <fieldset>
      <legend><?php echo $lang->story->legendOpenInfo;?></legend>
      <table class='table-1 a-left'>
        <tr>

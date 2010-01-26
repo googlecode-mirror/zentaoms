@@ -31,39 +31,25 @@ function browseByModule()
 {
     $('#mainbox').addClass('yui-t7');
     $('#treebox').removeClass('hidden');
-    $('#bymoduleTab').addClass('active');
-    $('#allTab').removeClass('active');
-    $('#bysearchTab').removeClass('active');
-    $('#querybox').addClass('hidden');
+    $('#featuremodule').addClass('active');
+    $('#featureall').removeClass('active');
 }
-function search(active)
-{
-    $('#mainbox').removeClass('yui-t7');
-    $('#treebox').addClass('hidden');
-    $('#querybox').removeClass('hidden');
-    $('#bymoduleTab').removeClass('active');
-    $('#' + active + 'Tab').removeClass('active');
-    $('#bysearchTab').addClass('active');
-}
-
 </script>
 
 <div class='yui-d0'>
   <div id='featurebar'>
     <div class='f-left'>
-      <span id='bymoduleTab' onclick='browseByModule()'><?php echo $lang->product->moduleStory;?></span>
-      <span id='bysearchTab' onclick='search("<?php echo $browseType;?>")'><?php echo $lang->product->searchStory;?></span>
-      <span id='allTab'><?php echo html::a($this->createLink('product', 'browse', "productID=$productID&browseType=all&param=0&orderBy=$orderBy&recTotal=0&recPerPage=200"), $lang->product->allStory);?></span>
+      <span id='featureall'><?php echo html::a($this->createLink('product', 'browse', "productID=$productID"), $lang->product->allStory);?></span>
+      <span id='featuremodule' onclick='browseByModule()'><?php echo $lang->product->moduleStory;?></span>
     </div>
     <div class='f-right'>
       <?php if(common::hasPriv('story', 'create')) echo html::a($this->createLink('story', 'create', "productID=$productID&moduleID=$moduleID"), $lang->story->create); ?>
     </div>
   </div>
-    <div id='querybox' class='<?php if($browseType !='bysearch') echo 'hidden';?>'><?php echo $searchForm;?></div>
 </div>
 
-<div class='yui-d0 <?php if($browseType == 'bymodule') echo 'yui-t7';?>' id='mainbox'>
-  <div class='yui-b <?php if($browseType != 'bymodule') echo 'hidden';?>' id='treebox'>
+<div class='yui-d0 <?php if($browseType == 'module') echo 'yui-t7';?>' id='mainbox'>
+  <div class='yui-b <?php if($browseType != 'module') echo 'hidden';?>' id='treebox'>
     <div class='box-title'><?php echo $productName;?></div>
     <div class='box-content'>
       <?php echo $moduleTree;?>
@@ -80,7 +66,7 @@ function search(active)
       <table class='table-1 fixed colored'>
         <thead>
           <tr class='colhead'>
-            <?php $vars = "productID=$productID&browseType=$browseType&param=$moduleID&orderBy=%s&recTotal={$pager->recTotal}&recPerPage={$pager->recPerPage}";?>
+            <?php $vars = "productID=$productID&moduleID=$moduleID&orderBy=%s&recTotal=$recTotal&recPerPage=$recPerPage";?>
             <th><?php common::printOrderLink('id',  $orderBy, $vars, $lang->story->id);?></th>
             <th><?php common::printOrderLink('pri', $orderBy, $vars, $lang->story->pri);?></th>
             <th class='w-p40'><?php common::printOrderLink('title', $orderBy, $vars, $lang->story->title);?></th>
@@ -89,7 +75,7 @@ function search(active)
             <th><?php common::printOrderLink('openedBy',       $orderBy, $vars, $lang->story->openedBy);?></th>
             <th><?php common::printOrderLink('estimate',       $orderBy, $vars, $lang->story->estimate);?></th>
             <th><?php common::printOrderLink('status',         $orderBy, $vars, $lang->story->status);?></th>
-            <th class='w-100px'><?php common::printOrderLink('lastEditedDate', $orderBy, $vars, $lang->story->lastEditedDate);?></th>
+            <th><?php common::printOrderLink('lastEditedDate', $orderBy, $vars, $lang->story->lastEditedDate);?></th>
             <th><?php echo $lang->action;?></th>
           </tr>
         </thead>
@@ -117,12 +103,12 @@ function search(active)
           <?php endforeach;?>
         </tbody>
       </table>
-      <?php $pager->show();?>
+      <?php echo $pager;?>
     </div>
   </div>
 </div>  
 <script language='javascript'>
 $('#module<?php echo $moduleID;?>').addClass('active')
-$('#<?php echo $browseType;?>Tab').addClass('active')
+$('#feature<?php echo $browseType;?>').addClass('active')
 </script>
 <?php include '../../common/footer.html.php';?>

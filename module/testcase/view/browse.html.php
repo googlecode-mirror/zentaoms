@@ -26,45 +26,32 @@
 <?php include '../../common/treeview.html.php';?>
 <?php include '../../common/colorize.html.php';?>
 <script language='Javascript'>
-/* 切换至按模块浏览。*/
+/* 切换浏览方式。*/
 function browseByModule(active)
 {
     $('#mainbox').addClass('yui-t7');
     $('#treebox').removeClass('hidden');
-    $('#bymoduleTab').addClass('active');
-    $('#' + active + 'Tab').removeClass('active');
-    $('#bysearchTab').removeClass('active');
-}
-
-/* 通过搜索方式。*/
-function browseBySearch(active)
-{
-    $('#mainbox').removeClass('yui-t7');
-    $('#treebox').addClass('hidden');
-    $('#querybox').removeClass('hidden');
-    $('#' + active + 'Tab').removeClass('active');
-    $('#bysearchTab').addClass('active');
-    $('#bymoduleTab').removeClass('active');
+    $('#bymoduletab').addClass('active');
+    $('#' + active + 'tab').removeClass('active');
 }
 </script>
+
 <div class='yui-d0'>
   <div id='featurebar'>
     <div class='f-left'>
       <?php
-      echo "<span id='bymoduleTab' onclick=\"browseByModule('$browseType')\">" . $lang->testcase->moduleCases . "</span> ";
-      echo "<span id='bysearchTab' onclick=\"browseBySearch('$browseType')\">{$lang->testcase->bySearch}</span> ";
-      echo "<span id='allTab'>" . html::a($this->createLink('testcase', 'browse', "productid=$productID&browseType=all&param=0&orderBy=$orderBy&recTotal=0&recPerPage=200"), $lang->testcase->allCases) . "</span>";
+      echo "<span id='bymoduletab' onclick=\"browseByModule('$type')\">" . $lang->testcase->moduleCases . "</span> ";
+      echo "<span id='alltab'>" . html::a($this->createLink('testcase', 'browse', "productid=$productID&type=all&param=0"), $lang->testcase->allCases) . "</span>";
       ?>
     </div>
     <div class='f-right'>
       <?php common::printLink('testcase', 'create', "productID=$productID&moduleID=$moduleID", $lang->testcase->create); ?>
     </div>
   </div>
-  <div id='querybox' class='<?php if($browseType != 'bysearch') echo 'hidden';?>'><?php echo $searchForm;?></div>
 </div>
 
-<div class='yui-d0 <?php if($browseType == 'bymodule') echo 'yui-t7';?>' id='mainbox'>
-  <div class='yui-b  <?php if($browseType != 'bymodule') echo 'hidden';?>' id='treebox'>
+<div class='yui-d0 <?php if($type == 'bymodule') echo 'yui-t7';?>' id='mainbox'>
+  <div class='yui-b  <?php if($type != 'bymodule') echo 'hidden';?>' id='treebox'>
     <div class='box-title'><?php echo $productName;?></div>
     <div class='box-content'>
       <?php echo $moduleTree;?>
@@ -77,7 +64,7 @@ function browseBySearch(active)
     <div class='yui-b'>
       <table class='table-1 colored'>
         <tr class='colhead'>
-          <?php $vars = "productID=$productID&browseType=$browseType&param=$param&orderBy=%s&recTotal={$pager->recTotal}&recPerPage={$pager->recPerPage}"; ?>
+          <?php $vars = "productID=$productID&type=$type&param=$param&orderBy=%s&recTotal=$recTotal&recPerPage=$recPerPage"; ?>
           <th><?php common::printOrderLink('id',       $orderBy, $vars, $lang->testcase->id);?></th>
           <th><?php common::printOrderLink('pri',      $orderBy, $vars, $lang->testcase->pri);?></th>
           <th><?php common::printOrderLink('title',    $orderBy, $vars, $lang->testcase->title);?></th>
@@ -96,12 +83,12 @@ function browseBySearch(active)
         </tr>
         <?php endforeach;?>
       </table>
-      <?php $pager->show();?>
+      <div class='a-right'><?php echo $pager;?></div> 
     </div>
   </div>
 </div>  
 <script language="Javascript">
-$("#<?php echo $browseType;?>Tab").addClass('active');
+$("#<?php echo $type;?>tab").addClass('active');
 $("#module<?php echo $moduleID;?>").addClass('active'); 
 </script>
 <?php include '../../common/footer.html.php';?>

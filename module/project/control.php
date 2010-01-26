@@ -30,7 +30,6 @@ class project extends control
     {
         parent::__construct();
         $this->projects = $this->project->getPairs();
-        if(!$this->projects and $this->methodName != 'create') $this->locate($this->createLink('project', 'create'));
     }
 
     /* 项目视图首页，*/
@@ -133,7 +132,7 @@ class project extends control
         $pager      = new pager($recTotal, $recPerPage, $pageID);
         $stories    = $this->story->getProjectStories($projectID, $orderBy, $pager);
         $storyTasks = $this->task->getStoryTaskCounts(array_keys($stories), $projectID);
-        $users      = $this->user->getPairs('noletter');
+        $users      = $this->user->getPairs($this->app->company->id, 'noletter');
 
         /* 赋值。*/
         $this->assign('header',     $header);
@@ -170,7 +169,7 @@ class project extends control
         $this->app->loadClass('pager', $static = true);
         $pager = new pager($recTotal, $recPerPage, $pageID);
         $bugs  = $this->bug->getProjectBugs($projectID, $orderBy, $pager);
-        $users = $this->user->getPairs('noletter');
+        $users = $this->user->getPairs($this->app->company->id, 'noletter');
 
         /* 赋值。*/
         $this->assign('header',   $header);
@@ -180,23 +179,6 @@ class project extends control
         $this->assign('pager',    $pager->get());
         $this->assign('orderBy',  $orderBy);
         $this->assign('users',    $users);
-
-        $this->display();
-    }
-
-    /* 浏览某一个项目下面的build。*/
-    public function build($projectID = 0)
-    {
-        /* 公共的操作。*/
-        $project = $this->commonAction($projectID);
-
-        /* 设定header和position信息。*/
-        $this->view->header->title = $project->name . $this->lang->colon . $this->lang->project->build;
-        $this->view->position[]    = html::a(inlink('browse', "projectID=$projectID"), $project->name);
-        $this->view->position[]    = $this->lang->project->build;
-
-        /* 查找build列表。*/
-        $this->view->builds = $this->loadModel('build')->getProjectBuilds((int)$projectID);
 
         $this->display();
     }
@@ -214,16 +196,11 @@ class project extends control
         $position[]      = html::a($this->createLink('project', 'browse', "projectID=$projectID"), $project->name);
         $position[]      = $this->lang->project->burn;
 
-        /* 生成图表。*/
-        $dataXML = $this->report->createSingleXML($this->project->getBurnData($project->id), $this->lang->project->charts->burn->graph);
-        $charts  = $this->report->createJSChart('line', $dataXML, 800);
-
         /* 赋值。*/
         $this->assign('header',   $header);
         $this->assign('position', $position);
         $this->assign('tabID',    'burn');
-        $this->assign('charts',   $charts);
-
+        $this->assign('charts',   $this->report->createChart('line', $this->createLink('project', 'burnData', "project=$projectID", 'xml')));
         $this->display();
     }
 
@@ -421,7 +398,7 @@ class project extends control
         $this->loadModel('user');
 
         $project = $this->project->findById($projectID);
-        $users   = $this->user->getPairs('noclosed');
+        $users   = $this->user->getPairs($this->app->company->id, 'noclosed');
         $users   = array('' => '') + $users;
         $members = $this->project->getTeamMembers($projectID);
 
@@ -464,8 +441,8 @@ class project extends control
         $products   = $this->project->getProducts($projectID);
         $browseLink = $this->createLink('project', 'story', "projectID=$projectID");
 
-        $this->session->set('storyList', $this->app->getURI(true)); // 记录需求列表状态。
-        $this->project->setMenu($this->projects, $project->id);     // 设置菜单。
+        /* 设置菜单。*/
+        $this->project->setMenu($this->projects, $project->id);
 
         if(empty($products))
         {

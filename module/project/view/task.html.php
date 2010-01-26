@@ -30,10 +30,7 @@
     <?php include './project.html.php';?>
     </div>
     <div class='f-right'>
-      <?php
-      common::printLink('task', 'create', "project=$project->id", $lang->task->create);
-      //common::printLink('task', 'import', "project=$project->id", $lang->task->import);
-      ?>
+      <?php if(common::hasPriv('task', 'create')) echo html::a($this->createLink('task', 'create', "project=$project->id"), $lang->task->create);?>
     </div>
   </div>
   <table class='table-1 fixed colored'>
@@ -76,8 +73,8 @@
         ?>
       </td>
       <td>
-        <?php if(common::hasPriv('task', 'edit'))   echo html::a($this->createLink('task', 'edit',   "taskid=$task->id"), $lang->edit);?>
-        <?php if(common::hasPriv('task', 'delete')) echo html::a($this->createLink('task', 'delete', "projectID=$task->project&taskid=$task->id"), $lang->delete, 'hiddenwin');?>
+        <?php if(common::hasPriv('task', 'edit'))   echo html::a($this->createLink('task', 'edit',   "taskid=$task->id"), $lang->task->edit);?>
+        <?php if(common::hasPriv('task', 'delete')) echo html::a($this->createLink('task', 'delete', "projectID=$task->project&taskid=$task->id"), $lang->task->delete, 'hiddenwin');?>
       </td>
     </tr>
     <?php endforeach;?>

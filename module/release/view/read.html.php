@@ -1,12 +1,12 @@
 <?php
 /**
- * The upgrade module zh-cn file of ZenTaoMS.
+ * The control file of release module of ZenTaoMS.
  *
  * ZenTaoMS is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *                                                                             
  * ZenTaoMS is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,17 +17,12 @@
  *
  * @copyright   Copyright: 2009 Chunsheng Wang
  * @author      Chunsheng Wang <wwccss@263.net>
- * @package     upgrade
+ * @package     release
  * @version     $Id$
  * @link        http://www.zentao.cn
  */
-$lang->upgrade->common  = '升级';
-$lang->upgrade->result  = '升级结果';
-$lang->upgrade->fail    = '升级失败';
-$lang->upgrade->success = '升级成功';
-$lang->upgrade->tohome  = '返回首页';
-
-$lang->upgrade->selectVersion = '选择版本';
-$lang->upgrade->fromVersion   = '升级版本';
-
-$lang->upgrade->fromVersions['0_3'] = '0.3 BETA';
+?>
+<?php include '../../common/header.html.php';?>
+<div id='doc3'>
+</div>  
+<?php include '../../common/footer.html.php';?>

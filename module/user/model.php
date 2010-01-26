@@ -44,7 +44,7 @@ class userModel extends model
     }
 
     /* 获得account=>realname的列表。params: noletter|noempty|noclosed。*/
-    public function getPairs($params = '', $companyID = 0)
+    public function getPairs($companyID = 0, $params = '')
     {
         if($companyID == 0) $companyID = $this->app->company->id;
         $users = $this->dao->select('account, realname')->from(TABLE_USER)->where('company')->eq((int)$companyID)->orderBy('account')->fetchPairs();
@@ -137,15 +137,10 @@ class userModel extends model
     }
     
     /* 删除一个用户。*/
-    public function delete($userID)
+    function delete($userID)
     {
-        return $this->dao->update(TABLE_USER)->set('status')->eq('delete')->where('id')->eq($userID)->limit(1)->exec();
-    }
-
-    /* 激活一个用户。*/
-    public function activate($userID)
-    {
-        return $this->dao->update(TABLE_USER)->set('status')->eq('active')->where('id')->eq($userID)->limit(1)->exec();
+        $sql = "DELETE FROM " . TABLE_USER . " WHERE id = '$userID' LIMIT 1";
+        return $this->dbh->exec($sql);
     }
 
     /**
@@ -162,7 +157,7 @@ class userModel extends model
         $password = filter_var($password, FILTER_SANITIZE_STRING);
         if(!$account or !$password) return false;
 
-        $sql  = "SELECT * FROM " . TABLE_USER . " WHERE account  = '$account' AND password = md5('$password') AND company  = '$companyID' AND status = 'active' LIMIT 1";
+        $sql  = "SELECT * FROM " . TABLE_USER . " WHERE account  = '$account' AND password = md5('$password') AND company  = '$companyID' LIMIT 1";
         $user = $this->dbh->query($sql)->fetch();
         if($user)
         {

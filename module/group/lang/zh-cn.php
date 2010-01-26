@@ -21,7 +21,7 @@
  * @version     $Id$
  * @link        http://www.zentao.cn
  */
-$lang->group->common       = '权限分组';
+$lang->group->common       = '分组';
 $lang->group->browse       = '浏览分组';
 $lang->group->create       = '新增分组';
 $lang->group->edit         = '编辑分组';
@@ -33,14 +33,13 @@ $lang->group->unlinkMember = '移除用户';
 $lang->group->confirmDelete= '您确定删除该用户分组吗？';
 $lang->group->successSaved = '成功保存';
 
-$lang->group->id       = '编号';
-$lang->group->name     = '分组名称';
-$lang->group->desc     = '分组描述';
-$lang->group->users    = '用户列表';
-$lang->group->module   = '模块';
-$lang->group->method   = '方法';
-$lang->group->priv     = '权限';
-$lang->group->checkall = '全选';
+$lang->group->id    = '编号';
+$lang->group->name  = '分组名称';
+$lang->group->desc  = '分组描述';
+$lang->group->users = '用户列表';
+$lang->group->module= '模块';
+$lang->group->method= '方法';
+$lang->group->priv  = '权限';
 
 /* 所有resource列表。*/
 $lang->resource->index->index = 'index';
@@ -49,7 +48,6 @@ $lang->resource->index->ping  = 'ping';
 $lang->resource->my->index       = 'index';
 $lang->resource->my->todo        = 'todo';
 $lang->resource->my->task        = 'task';
-$lang->resource->my->story       = 'story';
 $lang->resource->my->bug         = 'bug';
 $lang->resource->my->project     = 'project';
 $lang->resource->my->profile     = 'profile';
@@ -67,8 +65,14 @@ $lang->resource->product->browse = 'browse';
 $lang->resource->product->create = 'create';
 $lang->resource->product->edit   = 'edit';
 $lang->resource->product->delete = 'delete';
-$lang->resource->product->roadmap= 'roadmap';
 $lang->resource->product->ajaxGetProjects = 'ajaxGetProjects';
+
+$lang->resource->productplan->browse = 'browse';
+$lang->resource->productplan->create = 'create';
+$lang->resource->productplan->edit   = 'edit';
+$lang->resource->productplan->delete = 'delete';
+$lang->resource->productplan->linkStory   = 'linkStory';
+$lang->resource->productplan->unlinkStory = 'unlinkStory';
 
 $lang->resource->story->create  = 'create';
 $lang->resource->story->edit    = 'edit';
@@ -78,20 +82,6 @@ $lang->resource->story->tasks   = 'tasks';
 $lang->resource->story->ajaxGetProjectStories = 'ajaxGetProjectStories';
 $lang->resource->story->ajaxGetProductStories = 'ajaxGetProductStories';
 
-$lang->resource->productplan->browse = 'browse';
-$lang->resource->productplan->create = 'create';
-$lang->resource->productplan->edit   = 'edit';
-$lang->resource->productplan->delete = 'delete';
-$lang->resource->productplan->view   = 'view';
-$lang->resource->productplan->linkStory   = 'linkStory';
-$lang->resource->productplan->unlinkStory = 'unlinkStory';
-
-$lang->resource->release->browse = 'browse';
-$lang->resource->release->create = 'create';
-$lang->resource->release->edit   = 'edit';
-$lang->resource->release->delete = 'delete';
-$lang->resource->release->view   = 'view';
-
 $lang->resource->project->index  = 'index';
 $lang->resource->project->view   = 'view';
 $lang->resource->project->browse = 'browse';
@@ -100,11 +90,10 @@ $lang->resource->project->edit   = 'edit';
 $lang->resource->project->delete = 'delete';
 $lang->resource->project->task   = 'task';
 $lang->resource->project->story  = 'story';
-$lang->resource->project->build  = 'build';
 $lang->resource->project->bug    = 'bug';
 $lang->resource->project->burn   = 'burn';
 $lang->resource->project->burnData = 'burnData';
-$lang->resource->project->team     = 'team';
+$lang->resource->project->team   = 'team';
 $lang->resource->project->manageProducts = 'manageProducts';
 $lang->resource->project->manageChilds   = 'manageChilds';
 $lang->resource->project->manageMembers  = 'manageMembers';
@@ -118,13 +107,6 @@ $lang->resource->task->delete = 'delete';
 $lang->resource->task->view   = 'view';
 $lang->resource->task->ajaxGetUserTasks    = 'ajaxGetUserTasks';
 $lang->resource->task->ajaxGetProjectTasks = 'ajaxGetProjectTasks';
-
-$lang->resource->build->create = 'create';
-$lang->resource->build->edit   = 'edit';
-$lang->resource->build->delete = 'delete';
-$lang->resource->build->view   = 'view';
-$lang->resource->build->ajaxGetProductBuilds = 'ajaxGetProductBuilds';
-$lang->resource->build->ajaxGetProjectBuilds = 'ajaxGetProjectBuilds';
 
 $lang->resource->qa->index = 'index';
 
@@ -183,3 +165,5 @@ $lang->resource->search->buildQuery   = 'buildQuery';
 
 $lang->resource->admin->index         = 'index';
 $lang->resource->admin->browseCompany = 'browseCompany';
+$lang->resource->admin->browseUser    = 'browseUser';
+$lang->resource->admin->browseGroup   = 'browseGroup';

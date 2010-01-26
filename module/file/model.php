@@ -25,24 +25,20 @@
 <?php
 class fileModel extends model
 {
-    public $savePath  = '';
-    public $webPath   = '';
-    public $now       = 0;
+    public $savePath = '';
+    public $webPath  = '';
 
-    /* 构造函数。*/
     public function __construct()
     {
         parent::__construct();
-        $this->now = time();
         $this->setSavePath();
         $this->setWebPath();
     }
 
-    /* 通过对象类型获取文件列表。*/
     public function getByObject($objectType, $objectID)
     {
         $files = array();
-        $stmt = $this->dao->select('*')->from(TABLE_FILE)->where('objectType')->eq($objectType)->andWhere('objectID')->eq((int)$objectID)->orderBy('id')->query();
+        $stmt = $this->dao->select('*')->from(TABLE_FILE)->where('objectType')->eq($objectType)->andWhere('objectID')->eq((int)$objectID)->query();
         while($file = $stmt->fetch())
         {
             $file->fullPath = $this->webPath . $file->pathname;
@@ -52,11 +48,11 @@ class fileModel extends model
     }
 
     /* 保存上传的文件。*/
-    public function saveUpload($objectType = '', $objectID = '')
+    public function saveUpload($htmlTagName = 'files', $objectType = '', $objectID = '')
     {
         $fileTitles = array();
         $now        = date('Y-m-d H:i:s');
-        $files      = $this->getUpload();
+        $files      = $this->getUpload($htmlTagName);
 
         foreach($files as $id => $file)
         {
@@ -74,7 +70,7 @@ class fileModel extends model
     }
 
     /* 获取上传的文件信息。*/
-    private function getUpload($htmlTagName = 'files')
+    private function getUpload($htmlTagName)
     {
         $files = array();
         if(!isset($_FILES[$htmlTagName])) return $files;
@@ -88,7 +84,7 @@ class fileModel extends model
                 if(empty($filename)) continue;
                 $file['extension'] = $this->getExtension($filename);
                 $file['pathname']  = $this->setPathName($id, $file['extension']);
-                $file['title']     = !empty($_POST['labels'][$id]) ? htmlspecialchars($_POST['labels'][$id]) : pathinfo($filename, PATHINFO_FILENAME);
+                $file['title']     = pathinfo($filename, PATHINFO_FILENAME);
                 $file['size']      = $size[$id];
                 $file['tmpname']   = $tmp_name[$id];
                 $files[] = $file;
@@ -100,7 +96,7 @@ class fileModel extends model
             extract($_FILES[$htmlTagName]);
             $file['extension'] = $this->getExtension($name);
             $file['pathname']  = $this->setPathName(0, $file['extension']);
-            $file['title']     = !empty($_POST['labels'][0]) ? htmlspecialchars($_POST['labels'][0]) : pathinfo($filename, PATHINFO_FILENAME);
+            $file['title']     = pathinfo($name, PATHINFO_FILENAME);
             $file['size']      = $size;
             $file['tmpname']   = $tmp_name;
             return array($file);
@@ -120,15 +116,14 @@ class fileModel extends model
     /* 设置要存储的文件名。*/
     private function setPathName($fileID, $extension)
     {
-        return date('Ym/dHis', $this->now) . $fileID . mt_rand(0, 10000) . '.' . $extension;
+        return date('YmdHis') . $fileID . mt_rand(0, 10000) . '.' . $extension;
     }
 
     /* 设置存储路径。*/
     private function setSavePath()
     {
-        $savePath = $this->app->getAppRoot() . "www/data/upload/{$this->app->company->id}/" . date('Ym/', $this->now);
-        if(!file_exists($savePath)) mkdir($savePath, 0777, true);
-        $this->savePath = dirname($savePath) . '/';
+        $this->savePath = $this->app->getAppRoot() . "www/data/upload/{$this->app->company->id}/";
+        if(!file_exists($this->savePath)) mkdir($this->savePath, 0777, true);
     }
     
     /* 设置web访问路径。*/

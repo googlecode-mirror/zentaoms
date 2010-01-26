@@ -23,10 +23,4 @@
  */
 class file extends control
 {
-    /* 生成文件上传的表单。*/
-    public function buildForm($fileCount = 2)
-    {
-        $this->view->fileCount = $fileCount;
-        $this->display();
-    }
 }

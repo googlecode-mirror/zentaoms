@@ -23,30 +23,30 @@
  */
 ?>
 <?php include '../../common/header.html.php';?>
-<div class='yui-d0'>
+<div id='doc3'>
   <form method='post' target='hiddenwin'>
-    <table class='table-1'> 
+    <table align='center' class='table-4'> 
       <caption><?php echo $lang->release->create;?></caption>
       <tr>
+        <th class='rowhead'><?php echo $lang->release->product;?></th>
+        <td class='a-left'><input type='text' name='product' value='<?php echo $product;?>' /></td>
+      </tr>  
+      <tr>
         <th class='rowhead'><?php echo $lang->release->name;?></th>
-        <td><input type='text' name='name' class='text-3' /></td>
+        <td class='a-left'><input type='text' name='name' /></td>
       </tr>  
       <tr>
-        <th class='rowhead'><?php echo $lang->release->build;?></th>
-        <td><?php echo html::select('build', $builds, '', 'class="select-3"');?></td>
+        <th class='rowhead'><?php echo $lang->release->planDate;?></th>
+        <td class='a-left'><input type='text' name='planDate' /></td>
       </tr>  
-      <tr>
-        <th class='rowhead'><?php echo $lang->release->date;?></th>
-        <td><input type='text' name='date' class='text-3' value='<?php echo date('Y-m-d');?>' /></td>
-      </tr>  
-     </tr>  
- 
       <tr>
         <th class='rowhead'><?php echo $lang->release->desc;?></th>
-        <td><textarea name='desc' rows='8' class='area-1'></textarea></td>
+        <td class='a-left'><textarea name='desc' style='width:100%' rows='5'></textarea></td>
       </tr>  
       <tr>
-        <td colspan='2' class='a-center'><?php echo html::submitButton() . html::resetButton();?></td>
+        <td colspan='2'>
+          <input type='submit' />
+        </td>
       </tr>
     </table>
   </form>

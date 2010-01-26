@@ -49,58 +49,46 @@ class product extends control
     }
 
     /* 浏览某一个产品。*/
-    public function browse($productID = 0, $browseType = 'byModule', $param = 0, $orderBy = 'id|desc', $recTotal = 0, $recPerPage = 20, $pageID = 1)
+    public function browse($productID = 0, $moduleID = 0, $orderBy = 'id|desc', $recTotal = 0, $recPerPage = 20, $pageID = 1)
     {
-        /* 设置搜索条件。*/
-        $this->config->product->search['actionURL'] = $this->createLink('product', 'browse', "productID=$productID&browseType=bySearch");
-        $this->view->searchForm = $this->fetch('search', 'buildForm', $this->config->product->search);
-
-        /* 设置查询格式。*/
-        $browseType = strtolower($browseType);
+        //$this->config->product->search['actionURL'] = $this->createLink('product', 'browse', "productID=$productID&type=byQuery");
+        //$this->assign('searchForm', $this->fetch('search', 'buildForm', $this->config->product->search));
 
         /* 设置当前的产品id和模块id。*/
         $this->session->set('storyList', $this->app->getURI(true));
         $productID      = common::saveProductState($productID, key($this->products));
-        $moduleID       = ($browseType == 'bymodule') ? (int)$param : 0;
+        $moduleID       = (int)$moduleID;
+        $childModuleIds = $this->tree->getAllChildID($moduleID);
 
         /* 设置菜单。*/
         $this->product->setMenu($this->products, $productID);
 
         /* 设置header和导航条信息。*/
-        $this->view->header->title = $this->lang->product->index . $this->lang->colon . $this->products[$productID];
-        $this->view->position[]    = $this->products[$productID];
+        $header['title'] = $this->lang->product->index . $this->lang->colon . $this->products[$productID];
+        $position[]      = $this->products[$productID];
 
         /* 加载分页类，并查询stories列表。*/
         $this->app->loadClass('pager', $static = true);
         $pager   = new pager($recTotal, $recPerPage, $pageID);
+        $stories = $this->story->getProductStories($productID, $childModuleIds, 'all', $orderBy, $pager);
 
-        $stories = array();
-        if($browseType == 'all')
-        {
-            $stories = $this->story->getProductStories($productID, 0, 'all', $orderBy, $pager);
-        }
-        elseif($browseType == 'bymodule')
-        {
-            $childModuleIds = $this->tree->getAllChildID($moduleID);
-            $stories = $this->story->getProductStories($productID, $childModuleIds, 'all', $orderBy, $pager);
-        }
-        elseif($browseType == 'bysearch')
-        {
-            if($this->session->storyQuery == false) $this->session->set('storyQuery', ' 1 = 1');
-            $stories = $this->story->getByQuery($productID, $this->session->storyQuery, $orderBy, $pager);
-        }
+        /* 设置浏览模式。*/
+        $browseType = $moduleID > 0 ? 'module' : 'all';
 
+        $this->assign('header',        $header);
+        $this->assign('position',      $position);
         $this->assign('productID',     $productID);
         $this->assign('productName',   $this->products[$productID]);
         $this->assign('moduleID',      $moduleID);
         $this->assign('stories',       $stories);
         $this->assign('moduleTree',    $this->tree->getTreeMenu($productID, $viewType = 'product', $rooteModuleID = 0, array('treeModel', 'createStoryLink')));
         $this->assign('parentModules', $this->tree->getParents($moduleID));
-        $this->assign('pager',         $pager);
-        $this->assign('users',         $this->user->getPairs('noletter'));
+        $this->assign('pager',         $pager->get());
+        $this->assign('recTotal',      $pager->recTotal);
+        $this->assign('recPerPage',    $pager->recPerPage);
+        $this->assign('users',         $this->user->getPairs($this->app->company->id, 'noletter'));
         $this->assign('orderBy',       $orderBy);
         $this->assign('browseType',    $browseType);
-        $this->assign('moduleID',      $moduleID);
 
         $this->display();
     }
@@ -166,26 +154,10 @@ class product extends control
         }
     }
 
-    /* 产品路线图。*/
-    public function roadmap($productID)
-    {
-        /* 设置菜单。*/
-        $this->product->setMenu($this->products, $productID);
-
-        /* 赋值。*/
-        $product = $this->dao->findById($productID)->from(TABLE_PRODUCT)->fetch();
-        $this->view->header->title = $this->lang->product->roadmap;
-        $this->view->position[]    = html::a($this->createLink($this->moduleName, 'browse'), $product->name);
-        $this->view->position[]    = $this->lang->product->roadmap;
-        $this->view->product       = $product;
-        $this->view->roadmaps      = $this->product->getRoadmap($productID);
-        $this->display();
-    }
-
     /* 获得某一个产品对应的项目列表。*/
     public function ajaxGetProjects($productID, $projectID = 0)
     {
         $projects = $this->product->getProjectPairs($productID);
-        die(html::select('project', $projects, $projectID, 'onchange=loadProjectRelated(this.value)'));
+        die(html::select('project', $projects, $projectID, 'onchange=loadProjectStoriesAndTasks(this.value)'));
     }
 }

@@ -25,14 +25,12 @@
  */
 $lang->zentaoMS   = '禅道管理';
 $lang->logout     = '退出系统';
-$lang->login      = '登录';
+$lang->login      = '登陆';
 $lang->currentPos = '当前位置：';
 $lang->arrow      = ' » ';
 $lang->colon      = '::';
 $lang->reset      = '重填';
 $lang->edit       = '编辑';
-$lang->delete     = '删除';
-$lang->activate   = '激活';
 $lang->delete     = '删除';
 $lang->save       = '保存';
 $lang->action     = '操作';
@@ -43,10 +41,6 @@ $lang->zentaoSite = "官方网站";
 $lang->myControl  = "我的地盘";
 $lang->sponser    = "<a href='http://www.pujia.com' target='_blank'>普加赞助</a>";
 $lang->at         = ' 于 ';
-$lang->feature    = '未来';
-$lang->year       = '年';
-$lang->downArrow  = '↓';
-$lang->goback     = '返回';
 
 /* 主导航菜单。*/
 $lang->menu->index   = '首页|index|index';
@@ -66,7 +60,6 @@ $lang->my->menu->account  = '%s' . $lang->arrow;
 $lang->my->menu->todo     = array('link' => '我的TODO|my|todo|', 'subModule' => 'todo');
 $lang->my->menu->task     = '我的任务|my|task|';
 $lang->my->menu->project  = '我的项目|my|project|';
-$lang->my->menu->story    = '我的需求|my|story|';
 $lang->my->menu->bug      = '我的Bug|my|bug|';
 $lang->my->menu->profile  = array('link' => '我的档案|my|profile|', 'alias' => 'editprofile');
 $lang->todo->menu         = $lang->my->menu;
@@ -75,22 +68,18 @@ $lang->todo->menu         = $lang->my->menu;
 $lang->product->menu->list   = '%s';
 $lang->product->menu->story  = array('link' => '需求列表|product|browse|productID=%s',     'subModule' => 'story');
 $lang->product->menu->plan   = array('link' => '计划列表|productplan|browse|productID=%s', 'subModule' => 'productplan');
-$lang->product->menu->release= array('link' => '发布列表|release|browse|productID=%s',     'subModule' => 'release');
-$lang->product->menu->roadmap= '路线图|product|roadmap|productID=%s';
 $lang->product->menu->edit   = '编辑产品|product|edit|productID=%s';
 $lang->product->menu->delete = array('link' => '删除产品|product|delete|productID=%s', 'target' => 'hiddenwin');
 $lang->product->menu->module = '维护模块|tree|browse|productID=%s&view=product';
 $lang->product->menu->create = array('link' => '新增产品|product|create', 'float' => 'right');
 $lang->story->menu           = $lang->product->menu;
 $lang->productplan->menu     = $lang->product->menu;
-$lang->release->menu         = $lang->product->menu;
 
 /* 项目视图菜单设置。*/
 $lang->project->menu->list   = '%s';
 $lang->project->menu->task   = array('link' => '任务列表|project|task|projectID=%s', 'subModule' => 'task');
 $lang->project->menu->story  = array('link' => '需求列表|project|story|projectID=%s', 'alias' => 'linkstory');
 $lang->project->menu->bug    = 'Bug列表|project|bug|projectID=%s';
-$lang->project->menu->build  = array('link' => 'Build列表|project|build|projectID=%s', 'subModule' => 'build');
 $lang->project->menu->burn   = '燃烧图|project|burn|projectID=%s';
 $lang->project->menu->team   = array('link' => '团队成员|project|team|projectID=%s', 'alias' => 'managemembers');
 $lang->project->menu->line   = $lang->colon;
@@ -101,7 +90,6 @@ $lang->project->menu->product= '关联产品|project|manageproducts|projectID=%s
 
 $lang->project->menu->create = array('link' => '新增项目|project|create', 'float' => 'right');
 $lang->task->menu            = $lang->project->menu;
-$lang->build->menu           = $lang->project->menu;
 
 /* QA视图菜单设置。*/
 $lang->bug->menu->product  = '%s';
@@ -113,9 +101,9 @@ $lang->testcase->menu->bug      = array('link' => '缺陷管理|bug|browse|produ
 $lang->testcase->menu->testcase = array('link' => '用例管理|testcase|browse|productID=%s', 'alias' => 'view,create,edit', 'subModule' => 'tree');
 
 /* 组织结构视图菜单设置。*/
-$lang->company->menu->browseUser  = array('link' => '用户列表|company|browse', 'subModule' => 'user');
-$lang->company->menu->dept        = array('link' => '部门维护|dept|browse', 'subModule' => 'dept');
-$lang->company->menu->browseGroup = array('link' => '权限分组|group|browse', 'subModule' => 'group');
+$lang->company->menu->browseUser  = array('link' => '用户管理|company|browse', 'subModule' => 'user');
+$lang->company->menu->dept        = array('link' => '部门结构|dept|browse', 'subModule' => 'dept');
+$lang->company->menu->browseGroup = array('link' => '分组管理|group|browse', 'subModule' => 'group');
 $lang->company->menu->addGroup    = array('link' => '添加分组|group|create', 'float' => 'right');
 $lang->company->menu->addUser     = array('link' => '添加用户|user|create|company=%s&dept=%s&from=company', 'subModule' => 'user', 'float' => 'right');
 $lang->dept->menu            = $lang->company->menu;
@@ -132,21 +120,14 @@ $lang->user->menu->browse   = array('link' => '用户管理|company|browse|', 'f
 
 /* 后台管理菜单设置。*/
 $lang->admin->menu->browseCompany = array('link' => '公司管理|admin|browsecompany', 'subModule' => 'company');
-//$lang->admin->menu->convert       = array('link' => '从其他系统导入|convert|index', 'subModule' => 'convert');
-$lang->admin->menu->upgrade       = array('link' => '升级|upgrade|index',           'subModule' => 'upgrade');
 $lang->admin->menu->createCompany = array('link' => '新增公司|company|create', 'float' => 'right');
-$lang->convert->menu              = $lang->admin->menu;
-$lang->upgrade->menu              = $lang->admin->menu;
 
 /*菜单设置：分组设置。*/
 $lang->menugroup->release     = 'product';
 $lang->menugroup->story       = 'product';
 $lang->menugroup->productplan = 'product';
 $lang->menugroup->task        = 'project';
-$lang->menugroup->build       = 'project';
 $lang->menugroup->company     = 'admin';
-$lang->menugroup->convert     = 'admin';
-$lang->menugroup->upgrade     = 'admin';
 $lang->menugroup->user        = 'company';
 $lang->menugroup->group       = 'company';
 $lang->menugroup->bug         = 'qa';

@@ -95,16 +95,17 @@ class group extends control
             $this->group->updatePriv($groupID);
             die(js::alert($this->lang->group->successSaved));
         }
-
         $group      = $this->group->getById($groupID);
         $groupPrivs = $this->group->getPrivs($groupID);
 
-        $this->view->header->title = $this->lang->company->common . $this->lang->colon . $group->name . $this->lang->colon . $this->lang->group->managePriv;
-        $this->view->position[]    = html::a($this->createLink('admin', 'browsegroup', "companyid={$this->app->company->id}"), $this->lang->admin->group);
-        $this->view->position[]    = $group->name . $this->lang->colon . $this->lang->group->managePriv;
+        $header['title'] = $this->lang->admin->common . $this->lang->colon . $group->name . $this->lang->colon . $this->lang->group->managePriv;
+        $position[]      = html::a($this->createLink('admin', 'browsegroup', "companyid={$this->app->company->id}"), $this->lang->admin->group);
+        $position[]      = $group->name . $this->lang->colon . $this->lang->group->managePriv;
 
-        $this->view->group      = $group;
-        $this->view->groupPrivs = $groupPrivs;
+        $this->assign('header',     $header);
+        $this->assign('position',   $position);
+        $this->assign('group',      $group);
+        $this->assign('groupPrivs', $groupPrivs);
 
         /* 加载每一个模块的语言文件。*/
         foreach($this->lang->resource as $moduleName => $action) $this->app->loadLang($moduleName);
@@ -122,7 +123,7 @@ class group extends control
         $group      = $this->group->getById($groupID);
         $groupUsers = $this->group->getUserPairs($groupID);
         $groupUsers = join(',', array_keys($groupUsers));
-        $allUsers   = $this->user->getPairs('noclosed|noempty|noletter');
+        $allUsers   = $this->user->getPairs($this->app->company->id, 'noclosed|noempty|noletter');
 
         $header['title'] = $this->lang->admin->common . $this->lang->colon . $group->name . $this->lang->colon . $this->lang->group->manageMember;
         $position[]      = html::a($this->createLink('admin', 'browsegroup', "companyid={$this->app->company->id}"), $this->lang->admin->group);

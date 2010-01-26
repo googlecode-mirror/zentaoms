@@ -32,16 +32,15 @@
       <td><?php echo html::select('assignedTo', $users, $bug->resolvedBy, 'class=select-3');?></td>
     </tr>
     <tr>
-      <td class='rowhead'><?php echo $lang->bug->openedBuild;?></td>
-      <td><?php echo html::select('openedBuild', $builds, $bug->resolvedBuild, 'class=select-3');?></td>
-    </tr>
-    <tr>
       <td class='rowhead'><?php echo $lang->comment;?></td>
       <td><textarea name='comment' rows='6' class='area-1'></textarea></td>
     </tr>
     <tr>
       <th class='rowhead'><?php echo $lang->bug->files;?></th>
-      <td class='a-left'><?php echo $this->fetch('file', 'buildform');?></td>
+      <td class='a-left'>
+        <input type='file' name='files[]' class='text-4' />
+        <input type='file' name='files[]' class='text-4' />
+      </td>
     </tr>  
     <tr>
       <td colspan='2' class='a-center'>
@@ -51,6 +50,5 @@
       </td>
     </tr>
   </table>
-  <?php include '../../common/action.html.php';?>
 </div>
 <?php include '../../common/footer.html.php';?>
