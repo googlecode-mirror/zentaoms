@@ -836,7 +836,6 @@ class taskModel extends model
         $estimates = $this->dao->select('*')
           ->from(TABLE_TASKESTIMATE)  
           ->where('task')->eq($taskID)
-          ->orderBy('id')
           ->fetchAll();
         $comments = $this->dao->select('extra, comment')
             ->from(TABLE_ACTION)
@@ -919,10 +918,7 @@ class taskModel extends model
      */
     public function deleteEstimate($estimateID)
     {
-        $estimate     = $this->getEstimateById($estimateID);
         $this->dao->delete()->from(TABLE_TASKESTIMATE)->where('id')->eq($estimateID)->exec();
-        $lastEstimate = $this->dao->select('*')->from(TABLE_TASKESTIMATE)->where('task')->eq($estimate->task)->orderBy('id desc')->fetch();
-        $this->dao->update(TABLE_TASK)->set("consumed = consumed - {$estimate->consumed}")->set('`left`')->eq($lastEstimate->left)->where('id')->eq($estimate->task)->exec();
     }
 
     /**
