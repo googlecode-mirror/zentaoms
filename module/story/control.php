@@ -645,7 +645,7 @@ class story extends control
             {
                 foreach($allChanges as $storyID => $changes)
                 {
-                    $actionID = $this->action->create('story', $storyID, 'Closed', $this->post->comments[$storyID], ucfirst($this->post->closedReasons[$storyID]));
+                    $actionID = $this->action->create('story', $storyID, 'Closed', htmlspecialchars($this->post->comments[$storyID]), ucfirst($this->post->closedReasons[$storyID]));
                     $this->action->logHistory($actionID);
                     $this->sendMail($storyID, $actionID);
                 }

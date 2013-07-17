@@ -11,6 +11,7 @@
  */
 ?>
 <?php include '../../common/view/header.html.php';?>
+<?php include '../../common/view/kindeditor.html.php';?>
 <form method='post' enctype='multipart/form-data' target='hiddenwin'>
   <table class='table-1'>
     <caption><?php echo $bug->title;?></caption>
@@ -24,7 +25,7 @@
     </tr>
     <tr>
       <td class='rowhead'><?php echo $lang->comment;?></td>
-      <td><?php echo html::textarea('comment', '', "rows='6' class='area-1'");?></td>
+      <td><?php echo html::textarea('comment', '', "rows='6' class='w-p98'");?></td>
     </tr>
     <tr>
       <th class='rowhead'><?php echo $lang->bug->files;?></th>

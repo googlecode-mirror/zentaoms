@@ -453,7 +453,7 @@ class taskModel extends model
         {
             $consumed += $estimate->consumed;
             $left      = $estimate->left;
-            $work      = $estimate->work;
+            $work      = htmlspecialchars($estimate->work);
             $this->dao->insert(TABLE_TASKESTIMATE)->data($estimate) 
                 ->autoCheck()
                 ->exec();

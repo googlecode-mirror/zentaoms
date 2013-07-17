@@ -58,4 +58,5 @@
     </tr>
   </table>
 </form>
+<?php $case = $run->case; include './results.html.php'; ?>
 <?php include '../../common/view/footer.lite.html.php';?>

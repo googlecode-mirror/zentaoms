@@ -28,7 +28,7 @@
     </tr>
     <tr>
       <th class='rowhead'><?php echo $lang->story->comment;?></th>
-      <td><?php echo html::textarea('comment', '', "rows='8' class='area-1'");?></td>
+      <td><?php echo html::textarea('comment', '', "rows='8' class='w-p98'");?></td>
     </tr>
     <tr>
       <td colspan='2' class='a-center'>

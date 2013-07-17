@@ -557,6 +557,8 @@ class testtask extends control
         $this->view->run      = $run;
         $this->view->preCase  = $preCase;
         $this->view->nextCase = $nextCase;
+        $this->view->results  = $this->testtask->getResults(0, $caseID);
+        $this->view->users    = $this->loadModel('user')->getPairs('noclosed, noletter');
 
         die($this->display());
     }
